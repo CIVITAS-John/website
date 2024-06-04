@@ -1,9 +1,9 @@
 ---
 title: "ChatLogo: A Large Language Model-Driven Hybrid Natural- Programming Language Interface for Agent-Based Modeling and Programming"
 collection: talks
-type: "Talk"
+type: "Interactive Demo"
 permalink: /talks/2023-chatlogo
-venue: "FabLearn/Constructionism 2023, Interactive Demo"
+venue: "FabLearn/Constructionism 2023"
 date: 2023-10-07
 location: "New York City, NY, US"
 ---

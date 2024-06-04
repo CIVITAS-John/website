@@ -1,9 +1,9 @@
 ---
 title: "Measuring Young Learners’ Open-ended Agent-based Programming Practices with Learning Analytics"
 collection: talks
-type: "Talk"
+type: "Paper Presentation"
 permalink: /talks/2023-measurement
-venue: "AERA Annual Meeting 2023, Paper Session"
+venue: "AERA Annual Meeting 2023"
 date: 2021-06-08
 location: "Bochum, Germany"
 ---

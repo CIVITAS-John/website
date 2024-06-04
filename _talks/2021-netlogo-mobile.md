@@ -1,9 +1,9 @@
 ---
 title: "NetLogo Mobile: Introduction to A New Incarnation of NetLogo with embedded tools for Designing Interactive Scaffolds"
 collection: talks
-type: "Talk"
+type: "Interactive Demo"
 permalink: /talks/2021-netlogo-mobile
-venue: "ISLS Annual Meeting 2021, Interactive Demo"
+venue: "ISLS Annual Meeting 2021"
 date: 2021-06-08
 location: "Bochum, Germany"
 ---

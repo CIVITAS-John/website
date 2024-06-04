@@ -1,9 +1,9 @@
 ---
 title: "NetLogo Mobile: An Agent-Based Modeling Platform and Community for Learners, Teachers, and Researchers"
 collection: talks
-type: "Talk"
+type: "Poster"
 permalink: /talks/2020-netlogo-mobile
-venue: "Proceedings of International Conference of the Learning Sciences 2020, Poster"
+venue: "Proceedings of International Conference of the Learning Sciences 2020"
 date: 2020-06-19
 location: "Nashville, TN, US"
 ---

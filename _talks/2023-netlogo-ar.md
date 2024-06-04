@@ -1,9 +1,9 @@
 ---
 title: "NetLogo AR: Bringing Room-Scale Real-World Environments Into Computational Modeling for Children"
 collection: talks
-type: "Talk"
+type: "Interactive Demo"
 permalink: /talks/2023-netlogo-ar
-venue: "ACM Interaction Design and Children (IDC) 2023, Interactive Demo"
+venue: "ACM Interaction Design and Children (IDC) 2023"
 date: 2023-06-19
 location: "Chicago, IL, US"
 ---
