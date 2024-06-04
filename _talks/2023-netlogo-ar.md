@@ -8,7 +8,7 @@ date: 2023-06-19
 location: "Chicago, IL, US"
 ---
 
-This demo presents NetLogo AR, an authoring toolkit designed to transform NetLogo agent-based computational models into room-scale AR experiences, aimed at enhancing learning by integrating real-world inputs and facilitating AR design for researchers, educators, and children.
+NetLogo AR is an authoring toolkit designed to transform NetLogo agent-based computational models into room-scale AR experiences, aimed at enhancing learning by integrating real-world inputs and facilitating AR design for researchers, educators, and children.
 
 > Chen, J., Horn, M. S., & Wilensky, U. J. (2023). NetLogo AR: Bringing Room-Scale Real-World Environments Into Computational Modeling for Children. Proceedings of the ACM Interaction Design and Children (IDC) 2023.
 
