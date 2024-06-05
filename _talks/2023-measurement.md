@@ -6,6 +6,7 @@ permalink: /talks/2023-measurement
 venue: "AERA Annual Meeting 2023"
 date: 2021-06-08
 location: "Bochum, Germany"
+talk_url: "/files/talks/2023-measurement.pdf"
 ---
 
 This study introduces a method to measure young learners' agent-based programming practices using a 4-stage model, analyzing 2,300 projects from the Turtle Universe online community to highlight differences in ABP practices across various stages and modalities, and discussing implications for block-based ABP environments.

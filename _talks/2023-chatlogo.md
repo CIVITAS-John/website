@@ -6,6 +6,7 @@ permalink: /talks/2023-chatlogo
 venue: "FabLearn/Constructionism 2023"
 date: 2023-10-07
 location: "New York City, NY, US"
+talk_url: "/files/talks/2023-chatlogo.pdf"
 ---
 ChatLogo is a hybrid natural-programming language interface for agent-based modeling that combines conversational interactions and computational learning, featuring an intelligent command center and user-friendly interface to support novice learners.
 

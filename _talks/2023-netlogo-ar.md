@@ -6,6 +6,7 @@ permalink: /talks/2023-netlogo-ar
 venue: "ACM Interaction Design and Children (IDC) 2023"
 date: 2023-06-19
 location: "Chicago, IL, US"
+talk_url: "/files/talks/2023-ar.pdf"
 ---
 
 NetLogo AR is an authoring toolkit designed to transform NetLogo agent-based computational models into room-scale AR experiences, aimed at enhancing learning by integrating real-world inputs and facilitating AR design for researchers, educators, and children.
