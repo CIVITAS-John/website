@@ -13,3 +13,5 @@ In the spring quarter of 2024, I served as a teaching assistant of COMP_SCI 372/
 > This course will cover various topics related to the discipline of computer simulation through multi-agent modeling (also called agent-based modeling). Multi-agent modeling specifically focuses on the study of systems where a large number of independent entities (agents) simultaneously interact with each other, resulting in emergent patterns of behavior for the system as a whole.
 
 I participated in the course and syllabus design; provided customized feedback for students each week; worked with 14 advanced undergraduate and graduate students on individual final projects; and taught dozens of sections throughout the quarter. 
+
+As a result, students created astonishing projects ranging from sports to political science. At least 3 students of mine - 2 undergraduate and 1 graduate - have plan to publish papers based on the project. 
