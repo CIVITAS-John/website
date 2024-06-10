@@ -8,7 +8,7 @@ date: 2021-06-08
 location: "Bochum, Germany"
 talk_url: "/files/talks/2021-mobile.pdf"
 ---
-Since 2020, NetLogo Mobile has been developed into [Turtle Universe](/portfolio/turtle-universe/), a full-fledged agent-based modeling and programming app for children, educators, and enthusiasts. It was the foundation of [Tortuga](/portfolio/tortuga/) (an editor for interactive tutorials), [NetLogo AR](/portfolio/netlogo-ar/), and [NetLogo Chat](/portfolio/netlogo-chat). In May 2024, it has been used by 105,932 people around the world.
+Since 2020, NetLogo Mobile has been developed into [Turtle Universe](/portfolio/turtle-universe/), a full-fledged agent-based modeling and programming app for children, educators, and enthusiasts. It is the foundation of [Tortuga](/portfolio/tortuga/) (an editor for interactive tutorials), [NetLogo AR](/portfolio/netlogo-ar/), and [NetLogo Chat](/portfolio/netlogo-chat). In May 2024, it has been used by 105,932 people around the world.
 
 This is an interactive demo talk that I was not able to physically present. Again, due to the pandemic. [Here](/files/talks/2021-mobile.pdf) documents my planned session, where I introduced the prototype of [Tortuga](/portfolio/tortuga/), an editor for interactive tutorials.
 
@@ -17,7 +17,7 @@ This is an interactive demo talk that I was not able to physically present. Agai
 ## Behind the Scene
 In 2020, I started sending out prototypes to many online kids through my other project, [Physics Lab](/portfolio/physics-lab/). In an informal, online setting, children reported challenges understanding the basics of agent-based modeling and programming. Children have many questions about what NetLogo could do for them. However, as learners come from very diverse backgrounds and with different learning interests, we cannot enforce a rigid curriculum like the classroom. Hence comes Tortuga: a system to create adaptable and adaptive scaffolds. 
 
-![A screenshot of the Pocketworld Playground, an interactive tutorial created with Tortuga on Turtle Universe.](images/turtle-universe/screenshot-4.jpg)
+![A screenshot of the Pocketworld Playground, an interactive tutorial created with Tortuga on Turtle Universe.](/images/turtle-universe/screenshot-4.jpg)
 
 The best way to experience it is always to [try it out](https://turtlesim.com/products/turtle-universe/)!
 
