@@ -4,7 +4,7 @@ collection: publications
 permalink: /publication/2023-tortuga
 excerpt: 'This study explores Physics Lab’s Online Community (PLOC), a large-scale youth community with over 138,000 projects, and uses the Community of Inquiry (CoI) framework to demonstrate that cognitive, social, and teaching presences can emerge collaboratively among youths without instructor intervention.'
 date: 2023-6-10
-venue: 'Proceedings of ISLS Annual Meeting 2023'
+venue: 'Proceedings of ISLS Annual Meeting'
 paperurl: '/files/papers/2023-tortuga.pdf'
 citation: 'Chen, J., Horn, M. S., & Wilensky, U. J. (2023b). Tortuga: Building Interactive Scaffolds for Agent-based
 Modeling and Programming in NetLogo. Proceedings of ISLS Annual Meeting 2023.'

@@ -4,7 +4,7 @@ collection: publications
 permalink: /publication/2023-pocketworld
 excerpt: 'This study highlights the benefits of introducing agent-based programming (ABP) to youth, presenting the design of the Pocketworld Playground (POP) within Turtle Universe to engage out-of-school learners in ABP, and finding that POP effectively fostered interest and participation in ABP practices while contributing to the online community.'
 date: 2023-6-19
-venue: 'Proceedings of the ACM Interaction Design and Children (IDC) 2023'
+venue: 'Proceedings of the ACM Interaction Design and Children (IDC)'
 paperurl: '/files/papers/2023-pocketworld.pdf'
 citation: 'Chen, J., Zhao, L., Horn, M. S., & Wilensky, U. J. (2023). The Pocketworld Playground: Engaging online, out-of-school learners with Agent-based Programming. Proceedings of the ACM Interaction Design and Children (IDC) 2023.'
 ---
