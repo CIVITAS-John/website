@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Network Analysis</title>
+    <link rel="stylesheet" type="text/css" href="styles/visualization.css">
+    <link rel="stylesheet" type="text/css" href="styles/side-panel.css">
+    <link rel="stylesheet" type="text/css" href="styles/info-panel.css">
+    <link rel="stylesheet" type="text/css" href="styles/driver.css">
+</head>
+<body>
+    <div class="layer layer-data">
+        <div class="visualization">
+            <div class="floating">
+                <div class="legends"></div>
+                <div class="filters"></div>
+            </div>
+            <div class="info-panel"></div>
+        </div>
+        <div class="side-panel collapsed" >
+            <div class="collapsable"><span>»</span></div>
+            <div class="content">
+                <div class="panel-header">
+                    <h2>Network-based Evaluator</h2>
+                </div>
+                <div class="panel-menu"></div>
+            </div>
+        </div>
+    </div>
+    <div class="dialog" style="display: none;">
+        <div class="close">x</div>
+        <div class="content">
+
+        </div>
+    </div>
+    <script src="dependencies/d3.v7.js"></script>
+    <script src="dependencies/driver.js.iife.js"></script>
+    <script src="dependencies/cash.min.js"></script>
+    <script src="dependencies/graphology.min.js"></script>
+    <script src="dependencies/graphology-library.min.js"></script>
+    <script type="module">
+        import { Visualizer } from './visualizer.js';
+        window.Visualizer = new Visualizer($(".visualization"));
+    </script>
+</body>
+</html>
