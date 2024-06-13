@@ -36,6 +36,8 @@ export class Visualizer {
     SidePanel;
     /** Dialog: Dialog for the visualization. */
     Dialog;
+    /** Tutorial: The tutorial for the visualization. */
+    Tutorial;
     /** Constructor: Constructing the manager. */
     constructor(Container) {
         window.onpopstate = (Event) => this.PopState(Event);
@@ -43,6 +45,7 @@ export class Visualizer {
         this.SidePanel = new SidePanel($(".side-panel"), this);
         this.InfoPanel = new InfoPanel($(".info-panel"), this);
         this.Dialog = new Dialog($(".dialog"), this);
+        this.Tutorial = new Tutorial($(".portrait-overlay"), this);
         // Initialize the SVG
         var Root = d3.select(Container.get(0))
             .attr("style", `background-color: #290033`);
@@ -79,8 +82,6 @@ export class Visualizer {
             // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();
-            // Show tutorial if needed
-            new Tutorial($(".tutorial"), this);
         });
     }
     // Status management
@@ -128,13 +129,19 @@ export class Visualizer {
         if (Relayout)
             this.GenerateLayout(this.Status.Graph, Renderer);
         else
-            Renderer(0.002);
+            Renderer(0);
     }
     /** CenterCamera: Center the viewport camera to a position and scale.*/
-    CenterCamera(X, Y, Zoom) {
-        this.Container.transition().duration(500)
-            .call(this.Zoom.translateTo, X, Y)
-            .transition().call(this.Zoom.scaleTo, Zoom);
+    CenterCamera(X, Y, Zoom, Animated = true) {
+        if (Animated) {
+            this.Container.transition().duration(500)
+                .call(this.Zoom.translateTo, X, Y)
+                .transition().call(this.Zoom.scaleTo, Zoom);
+        }
+        else {
+            this.Zoom.translateTo(this.Container, X, Y);
+            this.Zoom.scaleTo(this.Container, Zoom);
+        }
     }
     // Filters
     /** Filters: The current filters of the graph. */
@@ -182,6 +189,7 @@ export class Visualizer {
                 Filter.SetParameter([Parameters]);
                 Filter.Mode = Mode;
             }
+            delete this.PreviewFilter;
         }
         if (!Previewing)
             this.NodeChosen(new Event("click"), undefined);
@@ -288,10 +296,18 @@ export class Visualizer {
                 this.TriggerChosenCallback(Node, false);
             }
         }
+        // Update the status
         this.GetStatus().ChosenNodes = Chosens;
         this.Container.classed("node-chosen", Chosens.length > 0);
         this.SidePanel.Render();
         return Node !== undefined && Chosens.includes(Node);
+    }
+    /** FocusOnNode: Focus on a node by its SVG element. */
+    FocusOnNode(Element) {
+        var Node = d3.select(Element).datum();
+        this.CenterCamera(Node.x, Node.y, 3, false);
+        if (!this.GetStatus().ChosenNodes.includes(Node))
+            this.NodeChosen(new Event("click"), Node);
     }
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
@@ -329,8 +345,6 @@ export class Visualizer {
     }
     /** RenderCodes: Render the coding graph to the container. */
     RenderCodes(Alpha) {
-        if (Alpha <= 0.001)
-            return;
         // Basic settings
         this.Container.attr("viewBox", "0 0 300 300");
         this.Zoom.extent([[0, 0], [300, 300]]);
@@ -469,8 +483,14 @@ export class Visualizer {
             .distance((Link) => DistanceScale)
             .strength((Link) => Link.VisualizeWeight))
             .force("collide", d3.forceCollide().radius((Node) => Node.Size + 2))
-            .on("tick", () => Renderer(this.Simulation.alpha()));
-        this.Simulation.alpha(1).alphaTarget(0).restart();
+            .on("tick", () => {
+            Renderer(this.Simulation.alpha());
+            if (this.Simulation.alpha() <= 0.001) {
+                this.Tutorial.ShowTutorial();
+                Handler.stop();
+            }
+        });
+        var Handler = this.Simulation.alpha(1).alphaTarget(0).restart();
     }
     // History
     /** History: The history of the visualizer. */

@@ -2,11 +2,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Network Analysis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>John Chen's Demo: Network-based Visualizer for Qualitative Open-ended Codes (NV-QOC)</title>
+    <link rel="stylesheet" type="text/css" href="styles/driver.css">
     <link rel="stylesheet" type="text/css" href="styles/visualization.css">
     <link rel="stylesheet" type="text/css" href="styles/side-panel.css">
     <link rel="stylesheet" type="text/css" href="styles/info-panel.css">
-    <link rel="stylesheet" type="text/css" href="styles/driver.css">
 </head>
 <body>
     <div class="layer layer-data">
@@ -33,6 +34,16 @@
 
         </div>
     </div>
+    <div class="portrait-overlay" style="display: none;">
+        <div class="content">
+            <img src="images/rotate-landscape.svg" alt="Rotate your device">
+            <h3>Screen Too Small?</h3>
+            <p>Please rotate to the landscape mode.</p>
+            <p>For a better experience, consider using a computer or a tablet.</p>
+            <hr>
+            <p>Any questions or feedback, please contact <a href="mailto:civitas@u.northwestern.edu">John Chen</a>.
+        </div>
+    </div>
     <script src="dependencies/d3.v7.js"></script>
     <script src="dependencies/driver.js.iife.js"></script>
     <script src="dependencies/cash.min.js"></script>
@@ -41,6 +52,15 @@
     <script type="module">
         import { Visualizer } from './visualizer.js';
         window.Visualizer = new Visualizer($(".visualization"));
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PZ9N9Z3X5S"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-PZ9N9Z3X5S');
     </script>
 </body>
 </html>
