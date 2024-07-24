@@ -1,7 +1,7 @@
 
 import { Panel } from '../panels/panel.js';
 import { Evaluate } from '../utils/evaluate.js';
-import { FindConsolidatedCode } from '../utils/dataset.js';
+import { GetConsolidatedSize } from '../utils/dataset.js';
 import { OwnerFilter } from '../utils/filters.js';
 /** CodebookSection: The codebook side panel. */
 export class CodebookSection extends Panel {
@@ -24,7 +24,7 @@ export class CodebookSection extends Panel {
         var Names = this.Dataset.Names;
         var Codebooks = this.Dataset.Codebooks;
         var Results = Evaluate(this.Visualizer.Dataset, this.Parameters);
-        var Metrics = Object.keys(Results[Names[1]]);
+        var Metrics = Object.keys(Results[Names[1]]).slice(0, -2);
         var Colors = {};
         // Flatten the dataset
         var Dataset = [];
@@ -38,9 +38,16 @@ export class CodebookSection extends Panel {
         for (var Metric of Metrics) {
             var Minimum = d3.min(Dataset.filter(Evaluation => Evaluation.Metric == Metric), (Evaluation) => Evaluation.Value);
             var Maximum = d3.max(Dataset.filter(Evaluation => Evaluation.Metric == Metric), (Evaluation) => Evaluation.Value);
-            Colors[Metric] = d3.scaleSequential()
-                .interpolator(d3.interpolateViridis)
-                .domain([Minimum, Maximum]);
+            if (Metric == "Divergence") {
+                Colors[Metric] = d3.scaleSequential()
+                    .interpolator(d3.interpolateViridis)
+                    .domain([Maximum, Minimum]);
+            }
+            else {
+                Colors[Metric] = d3.scaleSequential()
+                    .interpolator(d3.interpolateViridis)
+                    .domain([Minimum, Maximum]);
+            }
         }
         // Render the codebooks and evaluation results
         this.BuildTable(Object.entries(Results), (Row, [Key, Value], Index) => {
@@ -49,7 +56,7 @@ export class CodebookSection extends Panel {
             var Summary = $(`<td class="codebook-cell"></td>`).attr("id", `codebook-${Index + 1}`).addClass("actionable").appendTo(Row);
             Summary.append($(`<h4></h4>`).text(Key))
                 .append($(`<p class="tips"></p>`).text(`${Object.keys(Codebook).length} codes`))
-                .append($(`<p class="tips"></p>`).text(`${new Set(Object.keys(Codebook).map(Code => FindConsolidatedCode(Codebooks[0], Code)?.Label).map(Code => Code)).size} consolidated`))
+                .append($(`<p class="tips"></p>`).text(`${GetConsolidatedSize(Codebooks[0], Codebook)} consolidated`))
                 .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
                 .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
                 .on("click", (Event) => {
@@ -69,7 +76,7 @@ export class CodebookSection extends Panel {
                 var Color = Colors[Metric](MetricValue);
                 var Cell = $(`<td class="metric-cell"></td>`)
                     .attr("id", `metric-${Index}-${Metric}`)
-                    .text(d3.format(".1%")(MetricValue))
+                    .text(d3.format(Metric == "Divergence" ? ".1%" : ".1%")(MetricValue))
                     .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1, false, Metric))
                     .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
                     .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, Metric))

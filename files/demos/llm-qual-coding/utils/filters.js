@@ -117,7 +117,7 @@ export class OwnerFilter extends FilterBase {
             return new OwnerColorizer(Visualizer.Dataset.Names.map((_, Index) => Index).slice(1), Visualizer);
         }
         else if (this.Parameters.length == 1) {
-            if (this.Mode == "Novelty" || this.Mode == "Conformity")
+            if (this.Mode == "Novelty" || this.Mode == "Divergence")
                 return new NoveltyColorizer(this.Parameters[0]);
             else
                 return new CoverageColorizer(this.Parameters[0]);
@@ -161,10 +161,10 @@ export class NoveltyColorizer {
         if (!Node.NearOwners.has(this.Owner))
             return "#999999";
         // Novel
-        if (Node.NearOwners.size == (Node.NearOwners.has(0) ? 2 : 1))
+        if (Node.Owners.size == (Node.Owners.has(0) ? 2 : 1) && Node.Owners.has(this.Owner))
             return d3.interpolatePlasma(1);
         // Conform
-        if (Node.Owners.has(this.Owner) && Node.Owners.size == (Node.Owners.has(0) ? 2 : 1))
+        if (Node.Owners.has(this.Owner))
             return d3.interpolatePlasma(0.7);
         else
             return d3.interpolatePlasma(0.35);
