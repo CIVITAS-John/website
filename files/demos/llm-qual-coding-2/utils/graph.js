@@ -6,21 +6,24 @@ export function BuildSemanticGraph(Dataset, Parameter = new Parameters()) {
     var Nodes = Dataset.Codes.map((Code, Index) => ({
         Type: "Code", ID: Index.toString(), Data: Code, Links: [],
         Owners: new Set(Code.Owners), NearOwners: new Set(Code.Owners),
+        Weights: new Array(Dataset.Codebooks.length).fill(0), TotalWeight: 0, Neighbors: 0,
         Size: Math.sqrt(Code.Examples?.length ?? 1),
         x: 0, y: 0
     })); // x: Code.Position![0], y: Code.Position![1]
     var Links = new Map();
     var MaxDistance = 0;
     var MinDistance = Number.MAX_VALUE;
-    // Find the links
+    // Create the links
     for (var I = 0; I < Nodes.length; I++) {
         var Source = Nodes[I];
+        // Find potential links
         var Potentials = new Set();
         FindMinimumIndexes(Dataset.Distances[I], Parameter.ClosestNeighbors + 1).forEach((Index) => Potentials.add(Index));
         for (var J = I + 1; J < Nodes.length; J++) {
-            if (Dataset.Distances[I][J] < Parameter.LinkMinimumDistance)
+            if (Dataset.Distances[I][J] <= Parameter.LinkMinimumDistance)
                 Potentials.add(J);
         }
+        // Create the links
         for (var J of Potentials) {
             if (I == J)
                 continue;
@@ -41,14 +44,36 @@ export function BuildSemanticGraph(Dataset, Parameter = new Parameters()) {
                 Source.Links.push(Link);
                 Target.Links.push(Link);
                 Links.set(LinkID, Link);
-                if (Distance < Parameter.LinkMinimumDistance) {
-                    Source.Data.Owners?.forEach(Owner => Target.NearOwners.add(Owner));
-                    Target.Data.Owners?.forEach(Owner => Source.NearOwners.add(Owner));
+                if (Distance <= Parameter.LinkMinimumDistance) {
+                    Source.Data.Owners?.forEach(Owner => {
+                        Target.NearOwners.add(Owner);
+                        Target.Weights[Owner] += 1;
+                    });
+                    Target.Data.Owners?.forEach(Owner => {
+                        Source.NearOwners.add(Owner);
+                        Source.Weights[Owner] += 1;
+                    });
+                    Source.Neighbors++;
+                    Target.Neighbors++;
                 }
             }
             MaxDistance = Math.max(MaxDistance, Distance);
             MinDistance = Math.min(MinDistance, Distance);
         }
+    }
+    // Calculate the weights
+    for (var I = 0; I < Nodes.length; I++) {
+        var Source = Nodes[I];
+        for (var Owner = 0; Owner < Dataset.Codebooks.length; Owner++)
+            Source.Weights[Owner] = Math.min(Math.max(Source.Weights[Owner] / Math.max(Source.Neighbors, 1), 0), 1);
+        var RealOwners = 0;
+        for (var Owner of Source.Owners) {
+            if (Dataset.Weights[Owner] > 0)
+                RealOwners++;
+            Source.Weights[Owner] = 1;
+        }
+        Source.Novel = RealOwners == 1;
+        Source.TotalWeight = Source.Weights.reduce((A, B, I) => I == 0 ? A : A + B * Dataset.Weights[I], 0);
     }
     // Store it
     var Graph = {
@@ -59,8 +84,8 @@ export function BuildSemanticGraph(Dataset, Parameter = new Parameters()) {
     };
     // Identify the components
     Graph.Components = FindCommunities(Graph.Nodes, Graph.Links, (Node, Links) => {
-        return Math.sqrt(Node.Data.Examples?.length ?? 0) +
-            (Node.NearOwners?.size ?? 0);
+        // Only to solve ties
+        return Math.sqrt(Node.Data.Examples?.length ?? 0) * 0.001;
     });
     // Look at every link - and if the source and target are in different components, reduce the weight
     // Thus, we will have a more close spatial arrangement of the components
@@ -109,7 +134,8 @@ export function FindCommunities(Nodes, Links, NodeEvaluator, LinkEvaluator = (Li
     // Find the communities
     var Communities = graphologyLibrary.communitiesLouvain(Graph, {
         getEdgeWeight: (Edge) => Weights.get(Edge),
-        resolution: 1.5
+        resolution: 1.5,
+        rng: new Math.seedrandom('deterministic')
     });
     // Create the components
     var Components = new Array(Object.values(Communities).reduce((a, b) => Math.max(a, b), 0) + 1);
@@ -130,6 +156,9 @@ export function FindCommunities(Nodes, Links, NodeEvaluator, LinkEvaluator = (Li
         Component.ID = Index;
         Component.Nodes.forEach(Node => Node.Component = Component);
     });
+    // Sort the components
+    var ComponentWeights = Components.map(Component => Component.Nodes.reduce((A, B) => A + B.TotalWeight, 0));
+    Components.sort((A, B) => ComponentWeights[B.ID] - ComponentWeights[A.ID]);
     return Components;
 }
 /** SortNodesByCentrality: Sort nodes by their relative centrality. */
@@ -149,22 +178,9 @@ export function SortNodesByCentrality(Nodes, Links, NodeEvaluator, LinkEvaluator
     });
     // Translate the result
     for (var Node of Nodes) {
-        Result[Node.ID] = Result[Node.ID] + NodeEvaluator(Node, Links);
+        Result[Node.ID] = Result[Node.ID] * Node.TotalWeight + NodeEvaluator(Node, Links);
     }
     return Nodes.sort((A, B) => Result[B.ID] - Result[A.ID]);
-}
-/** FindBestNode: Find the best node in the set. */
-export function FindBestNode(Nodes, Links, NodeEvaluator) {
-    var Best = undefined;
-    var BestValue = Number.MIN_VALUE;
-    for (var Node of Nodes) {
-        var Value = NodeEvaluator(Node, Links.filter(Link => Node == Link.Source || Node == Link.Target));
-        if (Value > BestValue) {
-            Best = Node;
-            BestValue = Value;
-        }
-    }
-    return Best;
 }
 /** FilterNodeByOwner: Filter a node by presence of the owner. */
 export function FilterNodeByOwner(Node, Owner, NearOwners) {

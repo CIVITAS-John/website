@@ -1,11 +1,12 @@
 
 import { BuildSemanticGraph } from './utils/graph.js';
 import { ComponentFilter, OwnerFilter } from './utils/filters.js';
-import { Parameters } from './utils/utils.js';
+import { Parameters, PostData } from './utils/utils.js';
 import { InfoPanel } from './panels/info-panel.js';
 import { SidePanel } from './panels/side-panel.js';
 import { Dialog } from './panels/dialog.js';
 import { Tutorial } from './tutorial.js';
+import { Evaluate } from './utils/evaluate.js';
 /** Visualizer: The visualization manager. */
 export class Visualizer {
     /** Container: The container for the visualization. */
@@ -73,15 +74,23 @@ export class Visualizer {
         // Load the data
         d3.json("network.json").then((Data) => {
             this.Dataset = Data;
+            // Set the title
+            document.title = this.Dataset.Title + document.title.substring(document.title.indexOf(":"));
             // Parse the date as needed
             var Datasets = this.Dataset.Source;
             for (var Dataset of Object.values(Datasets.Data))
                 for (var Chunk of Object.values(Dataset))
                     for (var Item of Chunk.AllItems ?? [])
                         Item.Time = new Date(Date.parse(Item.Time));
+            // Calculate the weights
+            this.Dataset.Weights = this.Dataset.Weights ?? this.Dataset.Names.map((_, Index) => Index == 0 ? 0 : 1);
+            this.Dataset.TotalWeight = this.Dataset.Weights.reduce((A, B) => A + B, 0);
             // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();
+            // Evaluate and send back the results
+            var Results = Evaluate(this.Dataset, this.Parameters);
+            PostData("/api/report/", Results);
         });
     }
     // Status management

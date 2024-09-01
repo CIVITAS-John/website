@@ -27,7 +27,9 @@ export class CodeSection extends Panel {
         this.SetRefresh(() => {
             this.Container.empty();
             // Some notes
-            this.Container.append($(`<p class="tips"></p>`).text("Note that clusters are not deterministic, only to help understand the data. Names are chosen from the most connected codes."));
+            $(`<p class="tips"></p>`).appendTo(this.Container)
+                .html(`Clusters are not deterministic, only to help understand the data. Names are chosen by connectedness. <a href="javascript:void(0)">Click here</a> to visualize codebooks' coverage by clusters.`)
+                .find("a").on("click", () => this.Visualizer.Dialog.CompareCoverageByClusters());
             // Show the components
             var Components = this.GetGraph().Components;
             this.Container.append($(`<h3>${Components.length} Clusters, ${this.Dataset.Codes.length} Codes</h3>`));
@@ -114,18 +116,18 @@ export class CodeSection extends Panel {
                     .append($(`<svg width="2" height="2" viewbox="0 0 2 2"><circle r="1" cx="1" cy="1" fill="${Color}"></circle></svg>`))
                     .append($(`<span></span>`).text(Node.Data.Label)));
                 Summary.append($(`<p class="tips"></p>`).text(`From ${From} codes`));
-                // Show the owners
+                // Show the consensus
                 var Owners = $(`<td class="metric-cell"></td>`).appendTo(Row);
-                var OwnerSet = this.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
-                var Count = OwnerSet.size - (OwnerSet.has(0) ? 1 : 0);
-                var Color = this.RatioColorizer(Count / (this.Dataset.Codebooks.length - 1));
-                Owners.text(Count.toString())
+                // var OwnerSet = this.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
+                // var Count = [...OwnerSet].filter(Owner => this.Dataset.Weights![Owner] !== 0).length;
+                var Ratio = Node.TotalWeight / this.Dataset.TotalWeight;
+                var Color = this.RatioColorizer(Ratio);
+                Owners.text(d3.format(".0%")(Ratio))
                     .css("background-color", Color.toString())
                     .css("color", d3.lab(Color).l > 70 ? "black" : "white");
-                Owners.append($(`<p></p>`).text(d3.format(".0%")(Count / (this.Dataset.Codebooks.length - 1))));
                 // Show the examples
                 Row.append($(`<td class="number-cell actionable"></td>`).text(`${Node.Data.Examples?.length ?? 0}`));
-            }, ["Code", "Covered", "Cases"]);
+            }, ["Code", "Consensus", "Cases"]);
         });
     }
 }

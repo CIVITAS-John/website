@@ -50,6 +50,7 @@ export class SidePanel extends Panel {
         $(`#menu-${this.CurrentPanel}`).toggleClass("chosen", false);
         $(`#menu-${Name}`).toggleClass("chosen", true);
         this.CurrentPanel = Name;
+        return Panel;
     }
     /** CurrentPanel: The current panel being shown. */
     CurrentPanel = "Datasets";

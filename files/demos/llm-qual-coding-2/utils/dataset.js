@@ -2,6 +2,10 @@
 export function FindConsolidatedCode(Consolidated, Name) {
     return Object.values(Consolidated).find(Code => Code.Label == Name || Code.Alternatives?.includes(Name));
 }
+/** GetConsolidatedSize: Get the size of the consolidated codebook. */
+export function GetConsolidatedSize(Baseline, Codebook) {
+    return new Set(Object.keys(Codebook).map(Code => FindConsolidatedCode(Baseline, Code)?.Label).map(Code => Code)).size;
+}
 /** ExtractExamples: Extract examples from a code. */
 export function ExtractExamples(Examples) {
     var Results = new Map();
