@@ -21,7 +21,7 @@ repository               : "civitas-john/civitas-john.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile.png"
+  avatar           : "bio-photo.jpg"
   name             : "John (Yuehan) Chen"
   pronouns         : "he/him/his" 
   bio              : "Designing the Future of Learning"
