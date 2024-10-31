@@ -9,19 +9,33 @@ export class Panel {
     /** Container: The container for the side panel. */
     Container;
     /** Dataset: The codebook dataset of the visualizer. */
-    get Dataset() { return this.Visualizer.Dataset; }
+    get Dataset() {
+        return this.Visualizer.Dataset;
+    }
     /** Source: The source dataset of the visualizer. */
-    get Source() { return this.Visualizer.Dataset.Source; }
+    get Source() {
+        return this.Visualizer.Dataset.Source;
+    }
     /** InfoPanel: The information panel for the visualization. */
-    get InfoPanel() { return this.Visualizer.InfoPanel; }
+    get InfoPanel() {
+        return this.Visualizer.InfoPanel;
+    }
     /** SidePanel: The side panel for the visualization. */
-    get SidePanel() { return this.Visualizer.SidePanel; }
+    get SidePanel() {
+        return this.Visualizer.SidePanel;
+    }
     /** Dialog: Dialog for the visualization. */
-    get Dialog() { return this.Visualizer.Dialog; }
+    get Dialog() {
+        return this.Visualizer.Dialog;
+    }
     /** Parameters: The parameters of the visualizer. */
-    get Parameters() { return this.Visualizer.Parameters; }
+    get Parameters() {
+        return this.Visualizer.Parameters;
+    }
     /** Graph: The current graph of the visualizer. */
-    GetGraph() { return this.Visualizer.GetStatus().Graph; }
+    GetGraph() {
+        return this.Visualizer.GetStatus().Graph;
+    }
     /** Constructor: Constructing the side panel. */
     constructor(Container, Visualizer) {
         this.Visualizer = Visualizer;
@@ -55,7 +69,7 @@ export class Panel {
     BuildTable(Data, Builder, Columns = []) {
         var Table = $(`<table class="data-table"></table>`).appendTo(this.Container);
         if (Columns.length > 0)
-            Table.append($(`<tr></tr>`).append(...Columns.map(C => $(`<th></th>`).text(C))));
+            Table.append($(`<tr></tr>`).append(...Columns.map((C) => $(`<th></th>`).text(C))));
         Data.forEach((Item, Index) => Builder($(`<tr></tr>`).appendTo(Table), Item, Index));
         return Table;
     }

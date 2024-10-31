@@ -1,6 +1,6 @@
-import { GetCodebookColor } from '../utils/utils.js';
-import { Panel } from './panel.js';
-import { ExtractExamples, FindExampleSources, FindOriginalCodes } from '../utils/dataset.js';
+import { GetCodebookColor } from "../utils/utils.js";
+import { Panel } from "./panel.js";
+import { ExtractExamples, FindExampleSources, FindOriginalCodes } from "../utils/dataset.js";
 /** InfoPanel: The info panel for the visualizer. */
 export class InfoPanel extends Panel {
     /** Panels: Panels in the info panel. */
@@ -74,15 +74,16 @@ export class InfoPanel extends Panel {
             if (Everything) {
                 var List = $(`<ol class="quote"></ol>`).appendTo(Panel);
                 for (var Example of Examples) {
-                    $(`<li></li>`).appendTo(List)
-                        .append(this.BuildExample(Code, Example[0], Example[1]));
+                    $(`<li></li>`).appendTo(List).append(this.BuildExample(Code, Example[0], Example[1]));
                 }
             }
             else {
                 var Quote = $(`<p class="quote"></p>`).appendTo(Panel);
                 $("<span></span>").appendTo(Quote).text(Examples.keys().next().value);
                 if (Code.Examples.length > 1)
-                    $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`).appendTo(Quote).on("click", () => {
+                    $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`)
+                        .appendTo(Quote)
+                        .on("click", () => {
                         this.Dialog.ShowCode(0, Code);
                     });
             }
@@ -92,8 +93,10 @@ export class InfoPanel extends Panel {
     BuildOwnerLink(Code, Sources, Owner) {
         var Link = $(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</a>`);
         if (Sources.length > 0) {
-            Link.attr("title", Sources.map(Original => Original.Label).join(", "));
-            Link.on("click", () => { this.Dialog.ShowCode(Owner, Code, ...Sources); });
+            Link.attr("title", Sources.map((Original) => Original.Label).join(", "));
+            Link.on("click", () => {
+                this.Dialog.ShowCode(Owner, Code, ...Sources);
+            });
         }
         return Link;
     }
@@ -102,7 +105,7 @@ export class InfoPanel extends Panel {
         var Element = $(`<p>${Example}</p>`);
         // Add the source links
         if (IDs.length > 0)
-            IDs.forEach(ID => Element.append(this.BuildSourceLink(ID)));
+            IDs.forEach((ID) => Element.append(this.BuildSourceLink(ID)));
         // Add the owners
         if (Code.Owners && Code.Owners.length > 0) {
             var Owners = $(`<p class="owners">By: </p>`);

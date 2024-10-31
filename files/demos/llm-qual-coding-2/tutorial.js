@@ -1,4 +1,4 @@
-import { Panel } from './panels/panel.js';
+import { Panel } from "./panels/panel.js";
 
 /** Tutorial: The interactive tutorial for the visualizer. */
 export class Tutorial extends Panel {
@@ -24,8 +24,8 @@ export class Tutorial extends Panel {
 <p>You can leave the tutorial at any time. When you come back, it will start from where you left off.</p>
 <hr/>
 <p class="tips">By: <a href="https://civitas-john.github.io/">John Chen</a>, Lexie Zhao, & Alex Lostos (Northwestern University)</p>
-<p class="tips">Collaborators: Michael Horn, Bruce Sherin, Jessica Hullman, & Uri Wilensky</p>`
-                    }
+<p class="tips">Collaborators: Michael Horn, Bruce Sherin, Jessica Hullman, & Uri Wilensky</p>`,
+                    },
                 },
                 {
                     element: ".side-panel",
@@ -33,17 +33,17 @@ export class Tutorial extends Panel {
                         title: "The Side Panel",
                         description: `
 <p>The <strong>side panel</strong> provides different views of qualitative codebooks.</p>
-<p>Let's start by looking at the <strong>Datasets</strong>.</p>`
-                    }
+<p>Let's start by looking at the <strong>Datasets</strong>.</p>`,
+                    },
                 },
                 {
                     element: ".side-panel .content .dataset",
                     popover: {
                         title: "A Glance at the Datasets",
                         description: `
-<p>What research questions are we trying to answer? What are the datasets?</p>`
+<p>What research questions are we trying to answer? What are the datasets?</p>`,
                     },
-                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Datasets")
+                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Datasets"),
                 },
                 {
                     element: ".visualization",
@@ -51,8 +51,8 @@ export class Tutorial extends Panel {
                         title: "The Visualization",
                         description: `
 <p>Here are the qualitative codes resulted from the datasets. What did you notice?</p>
-<p>Each qualitative code is represented as <strong>a circle</strong>. Clusters of codes are visualized with <strong>polygon hulls</strong>.</p>`
-                    }
+<p>Each qualitative code is represented as <strong>a circle</strong>. Clusters of codes are visualized with <strong>polygon hulls</strong>.</p>`,
+                    },
                 },
                 {
                     element: ".visualization .nodes circle:first-child",
@@ -60,12 +60,12 @@ export class Tutorial extends Panel {
                         title: "The Code",
                         description: `
 <p>The <strong>size</strong> of the circle represents the <strong>number of examples</strong> in the dataset.</p>
-<p>Whenever you select a code, it - along with its neighbors - will be highlighted. Hold the <strong>shift</strong> key to select more.</p>`
+<p>Whenever you select a code, it - along with its neighbors - will be highlighted. Hold the <strong>shift</strong> key to select more.</p>`,
                     },
                     onHighlightStarted: () => {
                         this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child"));
                         Tutorial.getConfig().stagePadding = 100;
-                    }
+                    },
                 },
                 {
                     element: ".visualization .legends",
@@ -73,11 +73,11 @@ export class Tutorial extends Panel {
                         title: "Legends",
                         description: `
 <p>The <strong>color</strong> of the circle, by default, represents how many <strong>codebook</strong> it belongs to.</p>
-<p>Other views may have different color schemes. Please refer to the <strong>legends</strong> for more information.</p>`
+<p>Other views may have different color schemes. Please refer to the <strong>legends</strong> for more information.</p>`,
                     },
                     onHighlightStarted: () => {
                         Tutorial.getConfig().stagePadding = 5;
-                    }
+                    },
                 },
                 {
                     element: ".info-panel",
@@ -85,11 +85,11 @@ export class Tutorial extends Panel {
                         title: "Verifying the Code",
                         description: `
 <p>When a code is chosen, the <strong>info panel</strong> will display its name, definition, and an example quote.</p>
-<p>Since <strong>each code is merged from multiple ones</strong>, hover on each codebook to see their original names.</p>`
+<p>Since <strong>each code is merged from multiple ones</strong>, hover on each codebook to see their original names.</p>`,
                     },
                     onHighlightStarted: () => {
                         this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child"));
-                    }
+                    },
                 },
                 {
                     element: ".side-panel .content .code",
@@ -97,9 +97,9 @@ export class Tutorial extends Panel {
                         title: "Clusters of Codes",
                         description: `
 <p>AI-generated codebooks often contain hundreds of codes. A more structured way to view them is through <strong>clusters</strong>.</p>
-<p>Each cluster corresponds to <strong>a polygon hull</strong> in the visualization.</p>`
+<p>Each cluster corresponds to <strong>a polygon hull</strong> in the visualization.</p>`,
                     },
-                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Codes")
+                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Codes"),
                 },
                 {
                     element: ".side-panel .content .codebook",
@@ -107,9 +107,9 @@ export class Tutorial extends Panel {
                         title: "Evaluating the Codebooks",
                         description: `
 <p>Before we finish this short tour, let's go back to the side panel.</p>
-<p>The <strong>Codebooks</strong> view provides an overall, quantitative comparison of the codebooks.</p>`
+<p>The <strong>Codebooks</strong> view provides an overall, quantitative comparison of the codebooks.</p>`,
                     },
-                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Codebooks")
+                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Codebooks"),
                 },
                 {
                     element: ".side-panel .content .codebook table",
@@ -118,8 +118,8 @@ export class Tutorial extends Panel {
                         description: `
 <p>What do those metrics mean?</p>
 <p><strong>Coverage</strong> measures how well the codebook covers potential concepts from the dataset. If a codebook only has a highly related code, we count as 0.5. Codes covered by more codebooks will have higher weights.</p>
-<p><strong>Density</strong> measures how many codes the codebook used to achieve the coverage, in % relative to the baseline codebook (the merged result of all codebooks).</p>`
-                    }
+<p><strong>Density</strong> measures how many codes the codebook used to achieve the coverage, in % relative to the baseline codebook (the merged result of all codebooks).</p>`,
+                    },
                 },
                 {
                     element: ".side-panel .content .codebook table",
@@ -128,8 +128,8 @@ export class Tutorial extends Panel {
                         description: `
 <p><strong>Novelty</strong> measures how much % of <i>novel</i> concepts does the codebook cover.</p>
 <p><strong>Divergence</strong>, measures how this codebook's conceptual distribution differs from the baseline.</p>
-<p>By default, <i>novel</i> is defined as covered by only 1 codebook.</p>`
-                    }
+<p>By default, <i>novel</i> is defined as covered by only 1 codebook.</p>`,
+                    },
                 },
                 {
                     element: "#menu-tutorial",
@@ -141,7 +141,7 @@ export class Tutorial extends Panel {
 <p>There are more features for you to find out. Enjoy!</p>
 <hr/>
 <p class="tips">By: <a href="https://civitas-john.github.io/">John Chen</a>, Lexie Zhao, & Alex Lostos (Northwestern University)</p>
-<p class="tips">Collaborators: Michael Horn, Bruce Sherin, Jessica Hullman, & Uri Wilensky</p>`
+<p class="tips">Collaborators: Michael Horn, Bruce Sherin, Jessica Hullman, & Uri Wilensky</p>`,
                     },
                     onHighlighted: () => window.localStorage.setItem("tutorial-step", "-1"),
                 },

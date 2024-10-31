@@ -1,9 +1,9 @@
 
-import { Panel } from '../panels/panel.js';
-import { FilterNodeByExample } from '../utils/graph.js';
-import { FormatDate } from '../utils/utils.js';
-import { ChunkFilter, DatasetFilter } from '../utils/filters.js';
-import { GetItemsFromDataset } from '../utils/dataset.js';
+import { Panel } from "../panels/panel.js";
+import { FilterNodeByExample } from "../utils/graph.js";
+import { FormatDate } from "../utils/utils.js";
+import { ChunkFilter, DatasetFilter } from "../utils/filters.js";
+import { GetItemsFromDataset } from "../utils/dataset.js";
 /** DatasetSection: The dataset side panel. */
 export class DatasetSection extends Panel {
     /** Name: The short name of the panel. */
@@ -22,8 +22,7 @@ export class DatasetSection extends Panel {
         this.ShowDatasets();
     }
     /** RatioColorizer: The colorizer for ratios. */
-    RatioColorizer = d3.scaleSequential()
-        .interpolator(d3.interpolateViridis).domain([0, 1]);
+    RatioColorizer = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([0, 1]);
     /** ShowDatasets: Show all datasets. */
     ShowDatasets() {
         this.SetRefresh(() => {
@@ -34,7 +33,7 @@ export class DatasetSection extends Panel {
                 { Name: "Title", Value: this.Source.Title },
                 { Name: "Description", Value: this.Source.Description },
                 { Name: "Research Question", Value: this.Source.ResearchQuestion },
-                { Name: "Notes for Coding", Value: this.Source.CodingNotes }
+                { Name: "Notes for Coding", Value: this.Source.CodingNotes },
             ], (Item, Data) => {
                 Item.append($(`<strong>${Data.Name}:</strong>`));
                 Item.append($(`<span></span>`).text(Data.Value));
@@ -49,8 +48,7 @@ export class DatasetSection extends Panel {
                     .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new DatasetFilter()));
                 // Show the summary
                 var Summary = $(`<td class="dataset-cell actionable"></td>`).attr("id", `dataset-${Key}`).appendTo(Row);
-                Summary.append($(`<h4></h4>`).text(Key))
-                    .on("click", (Event) => {
+                Summary.append($(`<h4></h4>`).text(Key)).on("click", (Event) => {
                     if (Event.shiftKey)
                         this.Visualizer.SetFilter(false, new DatasetFilter(), Key, Event.shiftKey);
                     else
@@ -58,11 +56,11 @@ export class DatasetSection extends Panel {
                 });
                 // Find the date
                 var Items = GetItemsFromDataset(Value);
-                var Dates = Items.map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
+                var Dates = Items.map((Item) => Item.Time).sort((A, B) => A.getTime() - B.getTime());
                 Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
                 Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));
                 // Show the items
-                var IDs = new Set(Items.map(Item => Item.ID));
+                var IDs = new Set(Items.map((Item) => Item.ID));
                 var SizeCell = $(`<td class="number-cell actionable"></td>`).text(`${IDs.size}`).appendTo(Row);
                 SizeCell.append($(`<p class="tips"></p>`).text(`${Object.keys(Value).length} Chunks`));
                 // Show the codes
@@ -72,12 +70,13 @@ export class DatasetSection extends Panel {
                 $(`<td class="metric-cell"></td>`)
                     .css("background-color", Color.toString())
                     .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                    .appendTo(Row).text(`${Currents.length}`).append($(`<p></p>`).text(d3.format(".0%")(Currents.length / Codes.length)));
+                    .appendTo(Row)
+                    .text(`${Currents.length}`)
+                    .append($(`<p></p>`).text(d3.format(".0%")(Currents.length / Codes.length)));
                 $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Codes.length}`).append($(`<p></p>`).text(`100%`));
                 // Generic click event
-                Row.children("td:not(.dataset-cell)")
-                    .on("click", (Event) => this.Visualizer.SetFilter(false, new DatasetFilter(), Key, Event.shiftKey));
-            }, ["Metadata", "Items", "Filtered", "Total"]);
+                Row.children("td:not(.dataset-cell)").on("click", (Event) => this.Visualizer.SetFilter(false, new DatasetFilter(), Key, Event.shiftKey));
+            }, ["Metadata", "Items", "Filtered", "Codes"]);
         });
     }
     /** ShowDataset: Show a specific dataset. */
@@ -89,8 +88,7 @@ export class DatasetSection extends Panel {
         this.SetRefresh(() => {
             this.Container.empty();
             // Show the title
-            this.Container.append($(`<h3>${Name} (${Object.keys(Dataset).length} Chunks)</h3>`)
-                .prepend(this.BuildReturn(() => {
+            this.Container.append($(`<h3>${Name} (${Object.keys(Dataset).length} Chunks)</h3>`).prepend(this.BuildReturn(() => {
                 if (this.Visualizer.IsFilterApplied("Dataset", Name))
                     this.Visualizer.SetFilter(false, new DatasetFilter());
                 this.ShowDatasets();
@@ -107,26 +105,27 @@ export class DatasetSection extends Panel {
                 Summary.append($(`<h4></h4>`).text(`Chunk ${Key}`));
                 // Find the date
                 var Items = Chunk.AllItems ?? [];
-                Items = Items.filter(Item => this.Parameters.UseExtendedChunk ? true : !Item.Chunk || Item.Chunk == Key);
-                var Dates = Items.map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
+                Items = Items.filter((Item) => (this.Parameters.UseExtendedChunk ? true : !Item.Chunk || Item.Chunk == Key));
+                var Dates = Items.map((Item) => Item.Time).sort((A, B) => A.getTime() - B.getTime());
                 Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
                 Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));
                 Summary.on("click", () => this.Dialog.ShowChunk(Key, Chunk));
                 // Show the items
                 $(`<td class="number-cell actionable"></td>`).text(Items.length.toString()).appendTo(Row);
                 // Show the codes
-                var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Items.map(Item => Item.ID) ?? []));
+                var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Items.map((Item) => Item.ID) ?? []));
                 var Currents = Codes.filter((Node) => !Node.Hidden);
                 var Color = this.RatioColorizer(Currents.length / Math.max(1, Codes.length));
                 $(`<td class="metric-cell"></td>`)
                     .css("background-color", Color.toString())
                     .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                    .appendTo(Row).text(`${Currents.length}`).append($(`<p></p>`).text(d3.format(".0%")(Currents.length / Codes.length)));
+                    .appendTo(Row)
+                    .text(`${Currents.length}`)
+                    .append($(`<p></p>`).text(d3.format(".0%")(Currents.length / Codes.length)));
                 $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Codes.length}`).append($(`<p></p>`).text(`100%`));
                 // Generic click event
-                Row.children("td:not(.chunk-cell)")
-                    .on("click", (Event) => this.Visualizer.SetFilter(false, new ChunkFilter(), Key, Event.shiftKey));
-            }, ["Metadata", "Items", "Filtered", "Total"]);
+                Row.children("td:not(.chunk-cell)").on("click", (Event) => this.Visualizer.SetFilter(false, new ChunkFilter(), Key, Event.shiftKey));
+            }, ["Metadata", "Items", "Filtered", "Codes"]);
         });
     }
 }

@@ -1,19 +1,18 @@
 
 import { Panel } from "../panels/panel.js";
-import { EvaluateCodebooks } from "../utils/evaluate.js";
-import { GetConsolidatedSize } from "../utils/dataset.js";
+import { EvaluateUsers } from "../utils/evaluate.js";
 import { OwnerFilter } from "../utils/filters.js";
-/** CodebookSection: The codebook side panel. */
-export class CodebookSection extends Panel {
+/** UserSection: The speaker side panel. */
+export class UserSection extends Panel {
     /** Name: The short name of the panel. */
-    Name = "Coders";
+    Name = "Users";
     /** Title: The title of the panel. */
-    Title = "Codebook Overview";
+    Title = "Speaker Overview";
     /** Constructor: Constructing the panel. */
     constructor(Container, Visualizer) {
         super(Container, Visualizer);
         this.Visualizer = Visualizer;
-        this.Container = $(`<div class="codebook"></div>`).appendTo(Container).hide();
+        this.Container = $(`<div class="user"></div>`).appendTo(Container).hide();
     }
     /** Render: Render the panel. */
     Render() {
@@ -21,17 +20,17 @@ export class CodebookSection extends Panel {
         // Some notes
         this.Container.append($(`<p class="tips"></p>`).text("Note that all metrics are relative (i.e. against the Aggregated Code Space of the following Code Spaces)."));
         // Evaluate the codebooks
-        var Names = this.Dataset.Names;
-        var Codebooks = this.Dataset.Codebooks;
-        var Results = EvaluateCodebooks(this.Visualizer.Dataset, this.Parameters);
-        var Metrics = Object.keys(Results[Names[1]]).slice(0, -2);
+        var Users = Array.from(this.Dataset.UserIDToNicknames?.keys() ?? []);
+        var Results = EvaluateUsers(this.Visualizer.Dataset, this.Parameters);
+        var Metrics = Object.keys(Results[Users[0]]).slice(0, -2);
         var Colors = {};
         // Flatten the dataset
         var Dataset = [];
-        for (var I = 1; I < Names.length; I++) {
-            var Result = Results[Names[I]];
+        for (var I = 0; I < Users.length; I++) {
+            var Result = Results[Users[I]];
             for (var J = 0; J < Metrics.length; J++) {
-                Dataset.push({ Name: Names[I], Metric: Metrics[J], Value: Result[Metrics[J]] });
+                Dataset.push({ ID: Users[I], Name: this.Dataset.UserIDToNicknames?.get(Users[I]) ?? "",
+                    Metric: Metrics[J], Value: Result[Metrics[J]] });
             }
         }
         // Build color scales
@@ -47,15 +46,13 @@ export class CodebookSection extends Panel {
         }
         // Render the codebooks and evaluation results
         this.BuildTable(Object.entries(Results), (Row, [Key, Value], Index) => {
-            var Codebook = Codebooks[Index + 1];
             // Name of the codebook
             var Summary = $(`<td class="codebook-cell"></td>`)
                 .attr("id", `codebook-${Index + 1}`)
                 .addClass("actionable")
                 .appendTo(Row);
             Summary.append($(`<h4></h4>`).text(Key))
-                .append($(`<p class="tips"></p>`).text(`${Object.keys(Codebook).length} codes`))
-                .append($(`<p class="tips"></p>`).text(`${GetConsolidatedSize(Codebooks[0], Codebook)} consolidated`))
+                .append($(`<p class="tips"></p>`).text(`0 items`))
                 .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
                 .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
                 .on("click", (Event) => {

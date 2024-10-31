@@ -29,7 +29,7 @@ export function CalculateJSD(P, Q) {
                 return sum;
             }
             if (Q[i] === 0) {
-                throw new Error('KL Divergence is not defined when Q[i] is 0 and P[i] is non-zero');
+                throw new Error("KL Divergence is not defined when Q[i] is 0 and P[i] is non-zero");
             }
             return sum + p * Math.log(p / Q[i]);
         }, 0);
@@ -37,8 +37,8 @@ export function CalculateJSD(P, Q) {
     // Normalize the distributions to make them probability distributions
     const sumP = P.reduce((a, b) => a + b, 0);
     const sumQ = Q.reduce((a, b) => a + b, 0);
-    const normalizedP = P.map(p => p / sumP);
-    const normalizedQ = Q.map(q => q / sumQ);
+    const normalizedP = P.map((p) => p / sumP);
+    const normalizedQ = Q.map((q) => q / sumQ);
     // Calculate the average distribution
     const M = normalizedP.map((p, i) => (p + normalizedQ[i]) / 2);
     // Calculate the Jensen-Shannon Divergence
@@ -56,15 +56,23 @@ export function GetCodebookColor(Number, Codebooks) {
 export function FormatDate(Date) {
     if (!Date)
         return "(Unknown)";
-    return Date.toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+    return Date.toLocaleString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false,
+    });
 }
 /** PostData: Post data to a URL in the browser context. */
 export function PostData(URL, Data) {
     return fetch(URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(Data)
+        body: JSON.stringify(Data),
     });
 }

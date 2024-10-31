@@ -1,7 +1,7 @@
 
-import { Panel } from '../panels/panel.js';
-import { FilterNodesByOwner } from '../utils/graph.js';
-import { GetCodebookColor } from '../utils/utils.js';
+import { Panel } from "../panels/panel.js";
+import { FilterNodesByOwner } from "../utils/graph.js";
+import { GetCodebookColor } from "../utils/utils.js";
 /** CodeSection: The code side panel. */
 export class CodeSection extends Panel {
     /** Name: The short name of the panel. */
@@ -20,16 +20,17 @@ export class CodeSection extends Panel {
         this.ShowComponents();
     }
     /** RatioColorizer: The colorizer for ratios. */
-    RatioColorizer = d3.scaleSequential()
-        .interpolator(d3.interpolateViridis).domain([0, 1]);
+    RatioColorizer = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([0, 1]);
     /** ShowComponents: Show all components. */
     ShowComponents() {
         this.SetRefresh(() => {
             this.Container.empty();
             // Some notes
-            $(`<p class="tips"></p>`).appendTo(this.Container)
+            $(`<p class="tips"></p>`)
+                .appendTo(this.Container)
                 .html(`Clusters are not deterministic, only to help understand the data. Names are chosen by connectedness. <a href="javascript:void(0)">Click here</a> to visualize codebooks' coverage by clusters.`)
-                .find("a").on("click", () => this.Visualizer.Dialog.CompareCoverageByClusters());
+                .find("a")
+                .on("click", () => this.Visualizer.Dialog.CompareCoverageByClusters());
             // Show the components
             var Components = this.GetGraph().Components;
             this.Container.append($(`<h3>${Components.length} Clusters, ${this.Dataset.Codes.length} Codes</h3>`));
@@ -61,20 +62,24 @@ export class CodeSection extends Panel {
                     var Count = Codebooks.get(NameIndex);
                     if (NameIndex == 0 || Count == 0)
                         return;
-                    Owners.append($(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(NameIndex, this.Dataset.Codebooks.length)}">${this.Dataset.Names[NameIndex]}</a>`)
-                        .attr("title", `${Count} codes (${d3.format(".0%")(Count / Component.Nodes.length)})`));
+                    Owners.append($(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(NameIndex, this.Dataset.Codebooks.length)}">${this.Dataset.Names[NameIndex]}</a>`).attr("title", `${Count} codes (${d3.format(".0%")(Count / Component.Nodes.length)})`));
                 });
                 // Show the numbers
-                var Filtered = Component.Nodes.filter(Node => !Node.Hidden).length;
+                var Filtered = Component.Nodes.filter((Node) => !Node.Hidden).length;
                 var Color = this.RatioColorizer(Filtered / Component.Nodes.length);
                 $(`<td class="metric-cell"></td>`)
                     .css("background-color", Color.toString())
                     .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                    .appendTo(Row).text(`${Filtered}`).append($(`<p></p>`).text(d3.format(".0%")(Filtered / Component.Nodes.length)))
+                    .appendTo(Row)
+                    .text(`${Filtered}`)
+                    .append($(`<p></p>`).text(d3.format(".0%")(Filtered / Component.Nodes.length)))
                     .on("click", (Event) => this.Visualizer.ComponentChosen(Event, Component));
-                $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Component.Nodes.length}`).append($(`<p></p>`).text(`100%`))
+                $(`<td class="number-cell actionable"></td>`)
+                    .appendTo(Row)
+                    .text(`${Component.Nodes.length}`)
+                    .append($(`<p></p>`).text(`100%`))
                     .on("click", (Event) => this.Visualizer.ComponentChosen(Event, Component));
-            }, ["Cluster", "Filtered", "Total"]);
+            }, ["Cluster", "Filtered", "Codes"]);
         });
     }
     /** ShowComponent: Show a code component. */
@@ -89,8 +94,7 @@ export class CodeSection extends Panel {
             // Some notes
             this.Container.append($(`<p class="tips"></p>`).text("Note that clusters are not deterministic, only to help understand the data. Names are chosen from the most connected codes."));
             // Show the component
-            this.Container.append($(`<h3>${Component.Nodes.length} Codes</h3>`)
-                .prepend(this.BuildReturn(() => {
+            this.Container.append($(`<h3>${Component.Nodes.length} Codes</h3>`).prepend(this.BuildReturn(() => {
                 this.Visualizer.ComponentChosen(new Event("virtual"), Component);
                 this.ShowComponents();
             })));
@@ -104,11 +108,10 @@ export class CodeSection extends Panel {
                         this.Visualizer.CenterCamera(Node.x, Node.y, 3);
                 });
                 // Show the summary
-                var Summary = $(`<td class="code-cell actionable"></td>`)
-                    .attr("id", `code-${Node.ID}`).appendTo(Row);
+                var Summary = $(`<td class="code-cell actionable"></td>`).attr("id", `code-${Node.ID}`).appendTo(Row);
                 // Calculate source codes
-                var From = (Node.Data.Alternatives ?? []).concat(Node.Data.Label).filter(Name => {
-                    return Object.values(this.Dataset.Codebooks).some(Codebook => Codebook[Name] != undefined);
+                var From = (Node.Data.Alternatives ?? []).concat(Node.Data.Label).filter((Name) => {
+                    return Object.values(this.Dataset.Codebooks).some((Codebook) => Codebook[Name] != undefined);
                 }).length;
                 // Colorize the code in the same way as the graph
                 var Color = Node.Hidden ? "#999999" : Colorizer.Colorize(Node);

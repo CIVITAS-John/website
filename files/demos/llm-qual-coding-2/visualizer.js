@@ -1,12 +1,12 @@
 
-import { BuildSemanticGraph } from './utils/graph.js';
-import { ComponentFilter, OwnerFilter } from './utils/filters.js';
-import { Parameters, PostData } from './utils/utils.js';
-import { InfoPanel } from './panels/info-panel.js';
-import { SidePanel } from './panels/side-panel.js';
-import { Dialog } from './panels/dialog.js';
-import { Tutorial } from './tutorial.js';
-import { Evaluate } from './utils/evaluate.js';
+import { BuildSemanticGraph } from "./utils/graph.js";
+import { ComponentFilter, OwnerFilter } from "./utils/filters.js";
+import { Parameters, PostData } from "./utils/utils.js";
+import { InfoPanel } from "./panels/info-panel.js";
+import { SidePanel } from "./panels/side-panel.js";
+import { Dialog } from "./panels/dialog.js";
+import { Tutorial } from "./tutorial.js";
+import { EvaluateCodebooks } from "./utils/evaluate.js";
 /** Visualizer: The visualization manager. */
 export class Visualizer {
     /** Container: The container for the visualization. */
@@ -48,8 +48,7 @@ export class Visualizer {
         this.Dialog = new Dialog($(".dialog"), this);
         this.Tutorial = new Tutorial($(".portrait-overlay"), this);
         // Initialize the SVG
-        var Root = d3.select(Container.get(0))
-            .attr("style", `background-color: #290033`);
+        var Root = d3.select(Container.get(0)).attr("style", `background-color: #290033`);
         this.Container = Root.append("svg");
         var Scaler = this.Container.append("g");
         this.HullLayer = Scaler.append("g").attr("class", "hulls");
@@ -60,9 +59,12 @@ export class Visualizer {
         this.LegendContainer = Container.find(".legends");
         this.FilterContainer = Container.find(".filters");
         // Zoom support
-        this.Zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", (event) => {
+        this.Zoom = d3
+            .zoom()
+            .scaleExtent([1, 8])
+            .on("zoom", (event) => {
             Scaler.attr("transform", event.transform);
-            var ScaleProgress = (1 - Math.max(0, 3 - event.transform.k) / 2);
+            var ScaleProgress = 1 - Math.max(0, 3 - event.transform.k) / 2;
             this.LinkLayer.style("opacity", 0.3 + ScaleProgress);
             // this.NodeLayer.style("opacity", 0.1 + ScaleProgress);
             this.LabelLayer.style("opacity", ScaleProgress);
@@ -76,20 +78,23 @@ export class Visualizer {
             this.Dataset = Data;
             // Set the title
             document.title = this.Dataset.Title + document.title.substring(document.title.indexOf(":"));
-            // Parse the date as needed
+            // Parse the date and nicknames as needed
             var Datasets = this.Dataset.Source;
+            this.Dataset.UserIDToNicknames = new Map();
             for (var Dataset of Object.values(Datasets.Data))
                 for (var Chunk of Object.values(Dataset))
-                    for (var Item of Chunk.AllItems ?? [])
+                    for (var Item of Chunk.AllItems ?? []) {
                         Item.Time = new Date(Date.parse(Item.Time));
+                        this.Dataset.UserIDToNicknames.set(Item.UserID, Item.Nickname);
+                    }
             // Calculate the weights
-            this.Dataset.Weights = this.Dataset.Weights ?? this.Dataset.Names.map((_, Index) => Index == 0 ? 0 : 1);
+            this.Dataset.Weights = this.Dataset.Weights ?? this.Dataset.Names.map((_, Index) => (Index == 0 ? 0 : 1));
             this.Dataset.TotalWeight = this.Dataset.Weights.reduce((A, B) => A + B, 0);
             // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();
             // Evaluate and send back the results
-            var Results = Evaluate(this.Dataset, this.Parameters);
+            var Results = EvaluateCodebooks(this.Dataset, this.Parameters);
             PostData("/api/report/", Results);
         });
     }
@@ -114,18 +119,18 @@ export class Visualizer {
     /** Rerender: Rerender the visualization. */
     Rerender(Relayout = false) {
         // Apply the filter
-        this.Status.Graph.Nodes.forEach(Node => {
+        this.Status.Graph.Nodes.forEach((Node) => {
             var Filtered = true;
-            this.Filters.forEach(Filter => Filtered = Filtered && Filter.Filter(this, Node));
+            this.Filters.forEach((Filter) => (Filtered = Filtered && Filter.Filter(this, Node)));
             if (this.PreviewFilter)
                 Filtered = Filtered && this.PreviewFilter.Filter(this, Node);
             Node.Hidden = !Filtered;
         });
-        this.Status.Graph.Links.forEach(Link => {
+        this.Status.Graph.Links.forEach((Link) => {
             Link.Hidden = Link.Source.Hidden || Link.Target.Hidden;
         });
-        this.Status.Graph.Components?.forEach(Component => {
-            Component.CurrentNodes = Component.Nodes.filter(Node => !Node.Hidden);
+        this.Status.Graph.Components?.forEach((Component) => {
+            Component.CurrentNodes = Component.Nodes.filter((Node) => !Node.Hidden);
         });
         // Chose the renderer
         var Renderer = (Alpha) => { };
@@ -143,9 +148,11 @@ export class Visualizer {
     /** CenterCamera: Center the viewport camera to a position and scale.*/
     CenterCamera(X, Y, Zoom, Animated = true) {
         if (Animated) {
-            this.Container.transition().duration(500)
+            this.Container.transition()
+                .duration(500)
                 .call(this.Zoom.translateTo, X, Y)
-                .transition().call(this.Zoom.scaleTo, Zoom);
+                .transition()
+                .call(this.Zoom.scaleTo, Zoom);
         }
         else {
             this.Zoom.translateTo(this.Container, X, Y);
@@ -240,10 +247,12 @@ export class Visualizer {
             for (var I = 0; I < Filter.Parameters.length; I++) {
                 var Parameter = Filter.Parameters[I];
                 var Label = Names[I];
-                Container.append($(`<a href="javascript:void(0)" class="parameter"></a>`).text(Label)
+                Container.append($(`<a href="javascript:void(0)" class="parameter"></a>`)
+                    .text(Label)
                     .on("click", () => this.SetFilter(false, Filter, Parameter)));
             }
-            Container.append($(`<a href="javascript:void(0)" class="close"></a>`).text("X")
+            Container.append($(`<a href="javascript:void(0)" class="close"></a>`)
+                .text("X")
                 .on("click", () => this.SetFilter(false, Filter)));
         });
     }
@@ -282,7 +291,7 @@ export class Visualizer {
         // If there is a new mode and no shift key, remove all
         var Removal = Node == undefined || (!Additive && !Incumbent && !Event.shiftKey);
         if (Removal) {
-            Chosens.forEach(Node => {
+            Chosens.forEach((Node) => {
                 SetClassForNode(Node.ID, "chosen", false);
                 SetClassForLinks(Node.ID, "chosen-neighbor", false);
                 this.TriggerChosenCallback(Node, false);
@@ -331,7 +340,7 @@ export class Visualizer {
     ComponentChosen(Event, Component) {
         var Status = this.SetFilter(false, new ComponentFilter(), Component, Event?.shiftKey == true);
         if (Status)
-            this.CenterCamera(d3.mean(Component.Nodes.map(Node => Node.x)), d3.mean(Component.Nodes.map(Node => Node.y)), 3);
+            this.CenterCamera(d3.mean(Component.Nodes.map((Node) => Node.x)), d3.mean(Component.Nodes.map((Node) => Node.y)), 3);
         SetClassForComponent(Component, "chosen", Status, false);
         this.Container.classed("component-chosen", Status);
     }
@@ -339,7 +348,7 @@ export class Visualizer {
     /** RenderLegends: Render the legends for the visualization. */
     RenderLegends(Colorizer) {
         // Check if the legends are up-to-date
-        var Hash = JSON.stringify(Colorizer.Examples) + JSON.stringify(Object.values(Colorizer.Results).map(Values => Values.length));
+        var Hash = JSON.stringify(Colorizer.Examples) + JSON.stringify(Object.values(Colorizer.Results).map((Values) => Values.length));
         if (this.LegendContainer.data("hash") == Hash)
             return;
         this.LegendContainer.empty().data("hash", Hash);
@@ -356,7 +365,10 @@ export class Visualizer {
     RenderCodes(Alpha) {
         // Basic settings
         this.Container.attr("viewBox", "0 0 300 300");
-        this.Zoom.extent([[0, 0], [300, 300]]);
+        this.Zoom.extent([
+            [0, 0],
+            [300, 300],
+        ]);
         // Find the colorizer to use
         var Colorizer = this.GetColorizer();
         Colorizer.Results = {};
@@ -402,9 +414,10 @@ export class Visualizer {
                 .classed("hidden", (Node) => Node.Hidden ?? false);
         }
         // Render links
-        var DistanceLerp = d3.scaleSequential().clamp(true)
-            .domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance]);
-        var DistanceColor = d3.scaleSequential().clamp(true)
+        var DistanceLerp = d3.scaleSequential().clamp(true).domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance]);
+        var DistanceColor = d3
+            .scaleSequential()
+            .clamp(true)
             .domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance])
             .interpolator(d3.interpolateViridis);
         var AllLinks = this.LinkLayer.selectAll("line").data(Graph.Links);
@@ -427,8 +440,8 @@ export class Visualizer {
         if (Graph.Components) {
             var Filtered = this.PreviewFilter != undefined || this.Filters.size > 0;
             // Calculate the hulls
-            Graph.Components.forEach(Component => {
-                var Hull = d3.polygonHull(Component.Nodes.map(Node => [Node.x, Node.y]));
+            Graph.Components.forEach((Component) => {
+                var Hull = d3.polygonHull(Component.Nodes.map((Node) => [Node.x, Node.y]));
                 if (Hull) {
                     Component.Hull = Hull;
                     Component.Centroid = d3.polygonCentroid(Hull);
@@ -436,17 +449,22 @@ export class Visualizer {
                 else
                     delete Component.Hull;
             });
-            var Components = Graph.Components.filter(Component => Component.Hull);
+            var Components = Graph.Components.filter((Component) => Component.Hull);
             var AllHulls = this.HullLayer.selectAll("path").data(Components);
             AllHulls.exit().remove();
             AllHulls.join((Enter) => Enter.append("path")
                 .attr("id", (Component) => `hull-${Component.ID}`)
                 .attr("fill", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
                 .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
-                .on("mouseover", (Event, Component) => { this.ComponentOver(Event, Component); })
-                .on("mouseout", (Event, Component) => { this.ComponentOut(Event, Component); })
-                .on("click", (Event, Component) => { this.ComponentChosen(Event, Component); }), (Update) => Update)
-                .attr("d", (Component) => `M${Component.Hull.join("L")}Z`);
+                .on("mouseover", (Event, Component) => {
+                this.ComponentOver(Event, Component);
+            })
+                .on("mouseout", (Event, Component) => {
+                this.ComponentOut(Event, Component);
+            })
+                .on("click", (Event, Component) => {
+                this.ComponentChosen(Event, Component);
+            }), (Update) => Update).attr("d", (Component) => `M${Component.Hull.join("L")}Z`);
             // Render the component labels
             var AllComponents = this.ComponentLayer.selectAll("text").data(Components);
             AllComponents.exit().remove();
@@ -485,9 +503,12 @@ export class Visualizer {
         this.Simulation = d3.forceSimulation();
         var ForceLink = d3.forceLink();
         this.Simulation.nodes(Graph.Nodes)
-            .force("repulse", d3.forceManyBody().distanceMax(30).strength(-DistanceScale * 5))
+            .force("repulse", d3
+            .forceManyBody()
+            .distanceMax(30)
+            .strength(-DistanceScale * 5))
             .force("center", d3.forceCenter().strength(0.01))
-            .force("link", ForceLink.links(Graph.Links.filter(Link => Link.VisualizeWeight >= 0.1))
+            .force("link", ForceLink.links(Graph.Links.filter((Link) => Link.VisualizeWeight >= 0.1))
             .id((Node) => Node.index)
             .distance((Link) => DistanceScale)
             .strength((Link) => Link.VisualizeWeight))
@@ -527,7 +548,7 @@ function SetClassForComponent(Component, Class, Status, ForNodes = true) {
     $(`#component-${Component.ID}`).toggleClass(Class, Status);
     $(`#hull-${Component.ID}`).toggleClass(Class, Status);
     if (ForNodes)
-        Component.Nodes.forEach(Node => {
+        Component.Nodes.forEach((Node) => {
             SetClassForNode(Node.ID, Class, Status);
             // SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID == Other) != -1);
         });
