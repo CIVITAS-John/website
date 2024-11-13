@@ -230,6 +230,10 @@ export class Visualizer {
             Colorizer = new OwnerFilter().GetColorizer(this);
         return Colorizer;
     }
+    /** GetFilter: Get a filter by its name. */
+    GetFilter(Name) {
+        return this.Filters.get(Name);
+    }
     /** IsFilterApplied: Check if a filter is applied. */
     IsFilterApplied(Name, Parameter, Mode) {
         var Filter = this.Filters.get(Name);

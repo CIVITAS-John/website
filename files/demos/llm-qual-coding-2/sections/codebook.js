@@ -19,7 +19,12 @@ export class CodebookSection extends Panel {
     Render() {
         this.Container.empty();
         // Some notes
-        this.Container.append($(`<p class="tips"></p>`).text("Note that all metrics are relative (i.e. against the Aggregated Code Space of the following Code Spaces)."));
+        $(`<p class="tips"></p>`)
+            .appendTo(this.Container)
+            .html(`Note that all metrics are relative (i.e. against the Aggregated Code Space of the following Code Spaces).
+                <a href="javascript:void(0)">Click here</a> to manually verify each codebook's coverage.`)
+            .find("a")
+            .on("click", () => this.Visualizer.Dialog.ValidateCoverageByCodes());
         // Evaluate the codebooks
         var Names = this.Dataset.Names;
         var Codebooks = this.Dataset.Codebooks;

@@ -6,6 +6,7 @@ export function BuildSemanticGraph(Dataset, Parameter = new Parameters(), AllOwn
     var Nodes = Dataset.Codes.map((Code, Index) => ({
         Type: "Code",
         ID: Index.toString(),
+        Index: Index,
         Data: Code,
         Links: [],
         Owners: OwnerGetter(Code),
