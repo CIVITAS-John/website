@@ -242,7 +242,7 @@ export class Dialog extends Panel {
                     // Find the related codes
                     var Related = [];
                     if (Node.Owners.has(Index)) {
-                        Related = FindOriginalCodes(Codebook, Node.Data, Index);
+                        Related = [Node.Data];
                     }
                     else {
                         // Find the closest owned code
@@ -255,15 +255,19 @@ export class Dialog extends Panel {
                             if (Nearest.length > 1)
                                 Nearest = [Nearest[0]];
                         }
-                        Related = Nearest.flatMap(Node => FindOriginalCodes(Codebook, Node.Data, Index));
+                        Related = Nearest.map(Code => Code.Data);
                     }
                     // Show the related codes
-                    for (var Code of Related) {
-                        var Link = $(`<a href="javascript:void(0)"></a>`).text(Code.Label).appendTo(Cell);
-                        Link.on("click", () => {
-                            this.Visualizer.PushState(`validate-coverage-by-codes`, () => this.ValidateCoverageByCodes(Node.Data.Label));
-                            this.ShowCode(Index, Code);
-                        });
+                    for (var Original of Related) {
+                        for (var Code of FindOriginalCodes(Codebook, Original, Index)) {
+                            ((Original, Code) => {
+                                var Link = $(`<a href="javascript:void(0)"></a>`).text(Code.Label).appendTo(Cell);
+                                Link.on("click", () => {
+                                    this.Visualizer.PushState(`validate-coverage-by-codes`, () => this.ValidateCoverageByCodes(Node.Data.Label));
+                                    this.ShowCode(Index, Original, Code);
+                                });
+                            })(Original, Code);
+                        }
                     }
                 })(Codebook);
             }
