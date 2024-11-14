@@ -6,6 +6,7 @@ import { EvaluatePerCluster } from "../utils/evaluate.js";
 import { OwnerFilter } from "../utils/filters.js";
 import { RenderExamples, RenderItem } from "../utils/render.js";
 import { FilterItemByUser } from "../utils/graph.js";
+import { Shuffle } from "../utils/math.js";
 /** Dialog: The dialog for the visualizer. */
 export class Dialog extends Panel {
     /** Constructor: Constructing the dialog. */
@@ -201,10 +202,12 @@ export class Dialog extends Panel {
         var Graph = this.GetGraph();
         var Distances = this.Visualizer.Dataset.Distances;
         var Codes = Graph.Components.flatMap((Component) => Component.Nodes);
+        Shuffle(Codes, 131072);
         Codes.forEach(Node => {
             if (!this.VerifiedOwnerships.has(Node.ID)) {
                 var Default = new Map();
-                Indexes.forEach(Index => Default.set(Index, Node.Owners.has(Index) ? 2 : Node.NearOwners.has(Index) ? 1 : 0));
+                for (var Index = 0; Index < this.Visualizer.Dataset.Codebooks.length; Index++)
+                    Default.set(Index, Node.Owners.has(Index) ? 2 : Node.NearOwners.has(Index) ? 1 : 0);
                 this.VerifiedOwnerships.set(Node.ID, Default);
             }
         });
