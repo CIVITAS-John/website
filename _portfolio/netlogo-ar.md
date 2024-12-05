@@ -1,6 +1,6 @@
 ---
 title: "NetLogo AR (2023-Present)"
-excerpt: "NetLogo AR is a spatial augmented reality (AR) authoring toolkit that integrates room-scale AR technology with NetLogo, a widely used agent-based programming language. Distributed as part of Turtle Universe—the mobile version of NetLogo—it allows users to create dynamic simulations by combining digital content with real-world environments. NetLogo AR builds on NetLogo's strengths as a low-threshold, high-ceiling language designed for both scientific research and education. By leveraging the agent-based programming paradigm, it empowers users to model complex systems and fosters creativity in applications ranging from games to artistic expressions, making it especially accessible for K-12 learners and researchers alike.<br/><br/><img src='/images/netlogo-ar/modalities.png' width='800'>"
+excerpt: "NetLogo AR is a spatial AR authoring toolkit that combines room-scale AR technology with NetLogo, a popular agent-based programming language. Part of Turtle Universe, the mobile version of NetLogo, it allows users to create simulations that blend digital content with real-world environments. Built on NetLogo's strengths for research and education, it enables users to model complex systems, fostering creativity in applications like games and art, making it ideal for K-12 learners and researchers.<br/><br/><img src='/images/netlogo-ar/modalities.png' width='800'>"
 collection: portfolio
 ---
 
