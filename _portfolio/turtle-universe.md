@@ -4,7 +4,7 @@ excerpt: "A mobile incarnation of NetLogo, the most widely used agent-based mode
 collection: portfolio
 ---
 
-Since 2019, I have been the founder and project lead of Turtle Universe (TU). My responsibilities include:
+Since 2019, I have been the founder and project lead of Turtle Universe (TU), the mobile incarnation of [NetLogo](https://ccl.northwestern.edu/netlogo/). My responsibilities include:
 - Led a technical and research team with 16 undergraduate and graduate students to design and research the mobile-first incarnation of NetLogo.
 - Conducted design-based mixed methods research to understand the design of interactive scaffolds for informal, online learners (AERA 2022, IDC 2023, Constructionism 2023, ISLS 2023).
 
@@ -16,4 +16,5 @@ Originally called [NetLogo Mobile](/talks/2020-netlogo-mobile), Turtle Universe 
 Turtle Universe has been my main research site during the Ph. D. studies. While I was designing and developing it, I gave two presentations in ISLS introducing the software: ISLS [2020](/talks/2020-netlogo-mobile), [2021](/talks/2021-netlogo-mobile). Throughout the years, TU has branched out into several sub-projects, each with its own publication record. Please refer to the next section for more information.
 
 ## Related Projects
-Work in progress.
+- [NetLogo AR](/portfolio/netlogo-ar/)
+- [NetLogo Chat](/portfolio/netlogo-chat/)

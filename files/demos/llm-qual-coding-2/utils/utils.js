@@ -3,7 +3,7 @@
 export class Parameters {
     // For the semantic graph
     /** LinkMinimumDistance: The minimum distance to create links between codes. */
-    LinkMinimumDistance = 0.6;
+    LinkMinimumDistance = 0.7;
     /** LinkMaximumDistance: The maximum distance to create links between codes. */
     LinkMaximumDistance = 0.9;
     /** ClosestNeighbors: The number of closest neighbors to guarantee links regardless of the threshold. */
